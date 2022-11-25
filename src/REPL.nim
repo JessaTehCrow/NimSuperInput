@@ -1,36 +1,18 @@
-import terminal, winlean, strutils
+import terminal, winlean, strutils, math
+import keys
+
+export keys
 
 type  
     Position* = tuple[x,y:int]
 
-const
-    Esc* = 27
-    Enter* = 13
-    CtrlC* = 3
-    Backspace* = 8
-    Space* = 32
-
-    Arrows* = @[-1,-2,-3,-4]
-    ArrowLeft* = -1
-    ArrowRight* = -2
-    ArrowUp* = -3
-    ArrowDown* = -4
-
-    Func1* = 59
-    Func2* = 69
-    Func3* = 61
-    Func4* = 62 
-    Func5* = 63
-    Func6* = 64
-    Func7* = -5
-    Func8* = -6
-    Func9* = -7
-    Func10* = -8
-    Func11* = -9
-    Func12* = -10
-
-
-proc getch*(): cint {.importc:"_getch", dynlib:"msvcrt.dll".}
+    Input* = object
+        text*:string
+        lastKey*:int
+        position*:Position
+        prompt*:string
+        
+        returnKey:int
 
 
 proc getHandle*():Handle =
@@ -45,32 +27,62 @@ proc setPos*(pos:Position) =
     setCursorPos(getHandle(), pos.x, pos.y)
 
 
-proc clearLine*(line:int) =
+proc clearLine*(line:int, amount:int=1) =
     let currentPos:Position = getPos()
     let winSize = terminalSize()
-
+   
+    hideCursor(stdout)
     setCursorPos(getHandle(), 0, line)
-    echo " ".repeat(winSize.w)
+    echo " ".repeat(winSize.w * amount)
     setCursorPos(getHandle(), currentPos.x, currentPos.y)
+    showCursor(stdout)
 
 
-proc getInput*(prompt:string):string =
-    var input:string = ""
-    var index:int = 0
+proc clearLine*(line:int, text:string) = 
+    let currentPos:Position = getPos()
+    let winSize = terminalSize()
+    let lineAmount:int = math.ceil(text.len / winSize.w).int
+
+    hideCursor(stdout)
+    setCursorPos(getHandle(), 0, line)
+    echo text & " ".repeat(winSize.w * lineAmount)[text.len..^1]
+    setPos(currentPos)
+    showCursor(stdout)
 
 
-proc getKey*(key:cint): cint = 
-    if key == 0:
-        echo "Special 0: ", getch()
+proc newPos(original:Position, text:string): Position = 
+    let winSize = terminalSize()
+    let newY:int = original.y + math.floor((text.len + original.x) / (winSize.w)).int
+    let newX:int = (original.x + text.len) mod winSize.w
 
-    elif key == 224:
-        let special = getch()
-        case special
-            of 75: return ArrowLeft
-            of 77: return ArrowRight
-            of 72: return ArrowUp
-            of 80: return ArrowDown
-            else:
-                echo key
+    return (x:newX, y:newY)
+
+
+proc newInput*(prompt:string="", returnKey:int=Enter):Input =
+    return Input(prompt:prompt, text:"", returnKey:returnKey, position:getPos())
+
+
+proc handleInput*(inp:var Input, display:bool=true): bool = 
+    if display:
+        clearLine(inp.position.y, inp.prompt & inp.text)        
+        setPos(inp.position)
+        echo inp.prompt, inp.text
+        setPos(newPos(inp.position, inp.prompt & inp.text))
     
-    return key
+    let key:int = msvcrt_getch().getKey
+
+    inp.lastKey = key
+
+    if key in 33..126:
+        inp.text &= chr(key)
+
+    elif key == Space:
+        inp.text &= " "
+
+    elif key == Backspace and inp.text.len > 0:
+        inp.text = inp.text[0..^2]
+
+    elif key == inp.returnKey:
+        return false
+    
+    return true
