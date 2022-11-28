@@ -76,21 +76,27 @@ proc handleInput*(inp:var Input, display:bool=true): bool =
         clearLine(inp.position.y, inp.prompt & inp.text)        
         setPos(inp.position)
         echo inp.prompt, inp.text
-        setPos(newPos(inp.position, inp.prompt & inp.text))
+        setPos(newPos(inp.position, (inp.prompt & inp.text).len - inp.index))
 
     let key:int = msvcrt_getch().getKey
 
     inp.lastKey = key
 
     if key in 33..126:
-        inp.text &= chr(key)
+        inp.text.insert($chr(key), inp.text.len - inp.index)
 
     elif key == Space:
-        inp.text &= " "
+        inp.text.insert(" ", inp.text.len - inp.index)
 
     elif key == Backspace and inp.text.len > 0:
-        inp.text = inp.text[0..^2]
+        inp.text = inp.text[0..^(inp.index+2)] & inp.text[^(inp.index)..^1]
 
+    elif inp.lastKey == ArrowLeft and inp.index < inp.text.len:
+        inp.index += 1
+    
+    elif inp.lastKey == ArrowRight and inp.index > 0:
+        inp.index -= 1
+    
     elif key == inp.returnKey:
         return false
 
