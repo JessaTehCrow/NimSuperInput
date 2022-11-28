@@ -88,7 +88,7 @@ proc handleInput*(inp:var Input, display:bool=true): bool =
     elif key == Space:
         inp.text.insert(" ", inp.text.len - inp.index)
 
-    elif key == Backspace and inp.text.len > 0:
+    elif key == Backspace and inp.text != "" and inp.index != inp.text.len:
         inp.text = inp.text[0..^(inp.index+2)] & inp.text[^(inp.index)..^1]
 
     elif inp.lastKey == ArrowLeft and inp.index < inp.text.len:
@@ -96,7 +96,11 @@ proc handleInput*(inp:var Input, display:bool=true): bool =
     
     elif inp.lastKey == ArrowRight and inp.index > 0:
         inp.index -= 1
-    
+
+    elif inp.lastKey == Delete and inp.text != "" and inp.index != 0:
+        inp.text = inp.text[0..^(inp.index+1)] & inp.text[^(inp.index-1)..^1]
+        inp.index -= 1
+
     elif key == inp.returnKey:
         return false
 
