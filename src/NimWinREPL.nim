@@ -28,6 +28,14 @@ proc setPos*(pos:Position) =
     setCursorPos(getHandle(), pos.x, pos.y)
 
 
+proc newPos*(original:Position, text:string): Position = 
+    let winSize = terminalSize()
+    let newY:int = original.y + math.floor((text.len + original.x) / (winSize.w)).int
+    let newX:int = (original.x + text.len) mod winSize.w
+
+    return (x:newX, y:newY)
+
+
 proc clearLine*(line:int, amount:int=1) =
     let currentPos:Position = getPos()
     let winSize = terminalSize()
@@ -49,14 +57,6 @@ proc clearLine*(line:int, text:string) =
     echo text & " ".repeat(winSize.w * lineAmount)[text.len..^1]
     setPos(currentPos)
     showCursor(stdout)
-
-
-proc newPos(original:Position, text:string): Position = 
-    let winSize = terminalSize()
-    let newY:int = original.y + math.floor((text.len + original.x) / (winSize.w)).int
-    let newX:int = (original.x + text.len) mod winSize.w
-
-    return (x:newX, y:newY)
 
 
 proc newREPL*(prompt:string="", returnKey:int=Enter):Input =
