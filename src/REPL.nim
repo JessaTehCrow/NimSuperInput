@@ -11,6 +11,7 @@ type
         lastKey*:int
         position*:Position
         prompt*:string
+        index*:int
         
         returnKey:int
 
@@ -34,7 +35,7 @@ proc clearLine*(line:int, amount:int=1) =
     hideCursor(stdout)
     setCursorPos(getHandle(), 0, line)
     echo " ".repeat(winSize.w * amount)
-    setCursorPos(getHandle(), currentPos.x, currentPos.y)
+    setPos(currentPos)
     showCursor(stdout)
 
 
@@ -58,7 +59,7 @@ proc newPos(original:Position, text:string): Position =
     return (x:newX, y:newY)
 
 
-proc newInput*(prompt:string="", returnKey:int=Enter):Input =
+proc newREPL*(prompt:string="", returnKey:int=Enter):Input =
     return Input(prompt:prompt, text:"", returnKey:returnKey, position:getPos())
 
 
@@ -68,7 +69,7 @@ proc handleInput*(inp:var Input, display:bool=true): bool =
         setPos(inp.position)
         echo inp.prompt, inp.text
         setPos(newPos(inp.position, inp.prompt & inp.text))
-    
+
     let key:int = msvcrt_getch().getKey
 
     inp.lastKey = key
@@ -84,5 +85,5 @@ proc handleInput*(inp:var Input, display:bool=true): bool =
 
     elif key == inp.returnKey:
         return false
-    
+
     return true

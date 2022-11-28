@@ -30,8 +30,11 @@ const
     CtrlX* = 24
     CtrlY* = 25
     CtrlZ* = 26
+    CtrlArrLeft* = 115
+    CtrlArrUp* = 141
+    CtrlArrRight* = 116
+    CtrlArrDown* = 145
 
-    Arrows* = @[-1,-2,-3,-4]
     ArrowLeft* = -1
     ArrowRight* = -2
     ArrowUp* = -3
@@ -57,7 +60,7 @@ const
     PageDown* = -20
 
 proc getKey*(key:cint): cint = 
-    if key == 0 or key == 224:
+    if key == 0:
         let special = msvcrt_getch()
         case special
             of 59: return Func1
@@ -94,5 +97,5 @@ proc getKey*(key:cint): cint =
             of 134: return Func12
             else:
                 echo "\nspecial 224: ", special
-    
+
     return key
