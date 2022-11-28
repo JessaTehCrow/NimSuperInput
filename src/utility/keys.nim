@@ -30,7 +30,7 @@ const
     CtrlX* = 24
     CtrlY* = 25
     CtrlZ* = 26
-    CtrlBackspace* = 126
+    CtrlBackspace* = 127
     CtrlArrLeft* = 115
     CtrlArrUp* = 141
     CtrlArrRight* = 116
