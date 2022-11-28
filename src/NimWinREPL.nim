@@ -36,6 +36,14 @@ proc newPos*(original:Position, text:string): Position =
     return (x:newX, y:newY)
 
 
+proc newPos*(original:Position, amount:int): Position = 
+    let winSize = terminalSize()
+    let newY:int = original.y + math.floor((amount + original.x) / (winSize.w)).int
+    let newX:int = (original.x + amount) mod winSize.w
+
+    return (x:newX, y:newY)
+
+
 proc clearLine*(line:int, amount:int=1) =
     let currentPos:Position = getPos()
     let winSize = terminalSize()
