@@ -1,5 +1,5 @@
 import terminal, winlean, strutils, math
-import keys
+import utility/keys
 
 export keys
 
