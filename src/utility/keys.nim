@@ -1,7 +1,7 @@
 proc msvcrt_getch*(): cint {.importc:"_getch", dynlib:"msvcrt.dll".}
 
 const
-    Esc* = 27
+    Escape* = 27
     Enter* = 13
     Backspace* = 8
     Space* = 32
@@ -56,9 +56,11 @@ const
 
     Insert* = -17
     Delete* = -18
+    End* = -19
+    Home* = -20
 
-    PageUp* = -19
-    PageDown* = -20
+    PageUp* = -21
+    PageDown* = -22
 
 proc getKey*(key:cint): cint = 
     if key == 0:
@@ -96,6 +98,8 @@ proc getKey*(key:cint): cint =
             of 83: return Delete
             of 133: return Func11
             of 134: return Func12
+            of 79: return End
+            of 71: return Home
             else:
                 echo "\nspecial 224: ", special
 
