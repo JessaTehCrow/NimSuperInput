@@ -10,6 +10,7 @@ type
     Input* = object
         suggestions*:seq[string]
         suggestionIndex*:int
+        displayText*:string
         text*:string
         oldText*:string
         lastKey*:int
@@ -141,7 +142,7 @@ proc handleInput*(inp:var Input, display:bool=true): bool =
         clearLine(inp.position.y, inp.prompt & inp.text, math.ceil((inp.prompt & inp.oldText).len / winSize.w).int)
         hideCursor()
         setPos(inp.position)
-        writeLine(stdout, inp.prompt & inp.text & ("&gray;" & suggestion).color)
+        writeLine(stdout, inp.prompt & inp.displayText & ("&gray;" & suggestion).color)
         setPos(newCursorPos)
         flushFile(stdout)
         showCursor()
@@ -206,6 +207,7 @@ proc handleInput*(inp:var Input, display:bool=true): bool =
         return false
     
     # Set old text as well as clear lines for suggestions
+    inp.displayText = inp.text
     inp.oldText = oldText
 
     if inp.lastKey != Tab and secondlast == Tab:
