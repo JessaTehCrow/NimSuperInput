@@ -1,6 +1,6 @@
 # Package
 
-version       = "0.1.6"
+version       = "0.1.7"
 author        = "JessaTehCrow"
 description   = "Nim Read Eval Print Loop for windows"
 license       = "MIT"

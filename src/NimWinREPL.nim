@@ -136,10 +136,10 @@ proc handleInput*(inp:var Input, display:bool=true): bool =
     let oldSuggestions = allSuggestions(inp.oldText.split()[^1], inp.suggestions)
 
     let winSize = terminalSize()
-    let newCursorPos = newPos(inp.position, (inp.prompt & inp.text).len - inp.index)
+    let newCursorPos = newPos(inp.position, (inp.prompt & inp.displayText).len - inp.index)
 
     if display:
-        clearLine(inp.position.y, inp.prompt & inp.text, math.ceil((inp.prompt & inp.oldText).len / winSize.w).int)
+        clearLine(inp.position.y, inp.prompt & inp.displayText, math.ceil((inp.prompt & inp.oldText).len / winSize.w).int)
         hideCursor()
         setPos(inp.position)
         writeLine(stdout, inp.prompt & inp.displayText & ("&gray;" & suggestion).color)
@@ -152,7 +152,7 @@ proc handleInput*(inp:var Input, display:bool=true): bool =
     var oldText = inp.text
 
     var curpos = getPos()
-    let textSpan = newPos((x:0,y:0), inp.prompt & inp.text)
+    let textSpan = newPos((x:0,y:0), inp.prompt & inp.displayText)
     let actualPos = (x:curpos.x-textSpan.x, y:curpos.y-textSpan.y)
 
     if inp.lastKey != 0:
