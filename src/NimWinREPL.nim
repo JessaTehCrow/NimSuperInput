@@ -108,14 +108,11 @@ proc naiveSplit*(str:string, charSplit:char=' ', reserve:bool=false):seq[string]
 
 
 proc getSuggestion*(text:string, suggestions:seq[string]): string = 
-    if text.len == 0: 
-        return ""
+    if text.len == 0: return
 
     for k in suggestions:
         if k.startsWith(text) and text != k:
             return k[text.len..^1]
-    
-    return ""
 
 
 proc allSuggestions*(text:string, suggestions:seq[string]): seq[string] =
@@ -134,13 +131,13 @@ proc handleInput*(inp:var Input, display:bool=true): bool =
     let oldSuggestions = allSuggestions(inp.oldText.split()[^1], inp.suggestions)
 
     let winSize = terminalSize()
-    let newCursorPos = newPos(inp.position, (inp.prompt & inp.displayText).len - inp.index)
+    let newCursorPos = newPos(inp.position, (inp.prompt & inp.displayText.removeColor).len - inp.index)
 
     if display:
-        clearLine(inp.position.y, inp.prompt & inp.displayText, math.ceil((inp.prompt & inp.oldText).len / winSize.w).int)
+        clearLine(inp.position.y, inp.prompt & inp.displayText.removeColor, math.ceil((inp.prompt & inp.oldText).len / winSize.w).int)
         hideCursor()
         setPos(inp.position)
-        writeLine(stdout, inp.prompt & inp.displayText & ("&gray;" & suggestion & inp.hint).color)
+        writeLine(stdout, inp.prompt & inp.displayText.removeColor & ("&gray;" & suggestion & inp.hint).color)
         setPos(newCursorPos)
         flushFile(stdout)
         showCursor()
@@ -150,7 +147,7 @@ proc handleInput*(inp:var Input, display:bool=true): bool =
     var oldText = inp.text
 
     var curpos = getPos()
-    let textSpan = newPos((x:0,y:0), inp.prompt & inp.displayText)
+    let textSpan = newPos((x:0,y:0), inp.prompt & inp.displayText.removeColor)
     let actualPos = (x:curpos.x-textSpan.x, y:curpos.y-textSpan.y)
 
     if inp.lastKey != 0:
