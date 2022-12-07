@@ -188,7 +188,10 @@ proc handleInput*(inp:var Input, display:bool=true): bool =
             inp.text &= suggestion
 
     elif inp.lastKey == Escape:
-        inp.text = ""
+        if secondlast == Tab:
+            inp.text = inp.oldText
+        else:
+            inp.text = ""
 
     elif inp.lastKey == Home:
         inp.index = inp.text.len
