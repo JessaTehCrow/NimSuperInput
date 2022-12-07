@@ -76,7 +76,7 @@ proc clearLine*(line:int, text:string) =
 proc clearLine*(line:int, displayText:string, clearAmount:int) =
     let currentPos:Position = getPos()
     let winSize = terminalSize()
-    let amount = max((winSize.w * clearAmount) - displayText.len, 0)
+    let amount = max((winSize.w * clearAmount) - displayText.removeColor.len, 0)
 
     hideCursor(stdout)
     setCursorPos(getHandle(), 0, line)
@@ -134,7 +134,7 @@ proc handleInput*(inp:var Input, display:bool=true): bool =
     let newCursorPos = newPos(inp.position, (inp.prompt & inp.displayText.removeColor).len - inp.index)
 
     if display:
-        clearLine(inp.position.y, inp.prompt & inp.displayText.removeColor, math.ceil((inp.prompt & inp.oldText).len / winSize.w).int)
+        clearLine(inp.position.y, inp.prompt & inp.displayText, math.ceil((inp.prompt & inp.oldText).len / winSize.w).int)
         hideCursor()
         setPos(inp.position)
         writeLine(stdout, inp.prompt & inp.displayText & ("&gray;" & suggestion & inp.hint).color)
