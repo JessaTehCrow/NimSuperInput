@@ -122,9 +122,6 @@ proc allSuggestions*(text:string, suggestions:seq[string]): seq[string] =
         if s.startsWith(text) and text != s:
             result.add(s)
 
-    if text == "":
-        return @[]
-
 
 proc getInput*(inp: var Input): bool =
     inp.lastKey = msvcrt_getch().getKey
@@ -180,10 +177,10 @@ proc handleInput*(inp:var Input, display:bool=true): bool =
     
     elif inp.lastKey == Tab:
         if oldSuggestions.len > 0 and secondlast == Tab:
-            inp.suggestionIndex += 1
             var tempPos = newPos(inp.position, (inp.prompt & inp.oldText).len - inp.index)
             inp.text = inp.oldText & oldSuggestions[inp.suggestionIndex mod oldSuggestions.len][inp.oldText.split()[^1].len..^1]
             oldText = inp.oldText
+            inp.suggestionIndex += 1
             hideCursor()
             echo ("\n&darkCyan;" & oldSuggestions.join("   ")).color
             setPos(tempPos)
