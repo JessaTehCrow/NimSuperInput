@@ -133,6 +133,7 @@ proc handleInput*(inp:var Input, display:bool=true): bool =
     let winSize = terminalSize()
     let newCursorPos = newPos(inp.position, (inp.prompt & inp.displayText.removeColor).len - inp.index)
 
+    echo "\n\n\n", inp.position
     if display:
         clearLine(inp.position.y, inp.prompt & inp.displayText, math.ceil((inp.prompt & inp.oldText).len / winSize.w).int)
         hideCursor()
@@ -147,7 +148,7 @@ proc handleInput*(inp:var Input, display:bool=true): bool =
     var oldText = inp.text
 
     var curpos = getPos()
-    let textSpan = newPos((x:0,y:0), inp.prompt & inp.displayText.removeColor)
+    let textSpan = newPos((x:0,y:0), (inp.prompt & inp.displayText.removeColor).len - inp.index)
     let actualPos = (x:curpos.x-textSpan.x, y:curpos.y-textSpan.y)
 
     if inp.lastKey != 0:
