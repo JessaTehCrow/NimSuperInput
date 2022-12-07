@@ -137,7 +137,7 @@ proc handleInput*(inp:var Input, display:bool=true): bool =
         clearLine(inp.position.y, inp.prompt & inp.displayText.removeColor, math.ceil((inp.prompt & inp.oldText).len / winSize.w).int)
         hideCursor()
         setPos(inp.position)
-        writeLine(stdout, inp.prompt & inp.displayText.removeColor & ("&gray;" & suggestion & inp.hint).color)
+        writeLine(stdout, inp.prompt & inp.displayText & ("&gray;" & suggestion & inp.hint).color)
         setPos(newCursorPos)
         flushFile(stdout)
         showCursor()
