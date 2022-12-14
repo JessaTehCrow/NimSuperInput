@@ -111,13 +111,15 @@ proc getSuggestion*(text:string, suggestions:seq[string]): string =
     if text.len == 0: return
 
     for k in suggestions:
-        if k.startsWith(text) and text != k:
-            return k[text.len..^1]
+        let raw = k.removeColor
+        if raw.startsWith(text) and text != raw:
+            return raw[text.len..^1]
 
 
 proc allSuggestions*(text:string, suggestions:seq[string]): seq[string] =
     for s in suggestions:
-        if s.startsWith(text) and text != s:
+        let raw = s.removeColor
+        if raw.startsWith(text) and text != raw:
             result.add(s)
 
 
@@ -176,11 +178,11 @@ proc handleInput*(inp:var Input, display:bool=true): bool =
     elif inp.lastKey == Tab:
         if oldSuggestions.len > 0 and secondlast == Tab:
             var tempPos = newPos(inp.position, (inp.prompt & inp.oldText).len - inp.index)
-            inp.text = inp.oldText & oldSuggestions[inp.suggestionIndex mod oldSuggestions.len][inp.oldText.split()[^1].len..^1]
+            inp.text = inp.oldText & oldSuggestions[inp.suggestionIndex mod oldSuggestions.len].removeColor[inp.oldText.split()[^1].len..^1]
             oldText = inp.oldText
             inp.suggestionIndex += 1
             hideCursor()
-            echo ("\n&darkCyan;" & oldSuggestions.join("   ")).color
+            echo ("\n&gray;" & oldSuggestions.join("   ")).color
             setPos(tempPos)
         else:
             inp.text &= suggestion
