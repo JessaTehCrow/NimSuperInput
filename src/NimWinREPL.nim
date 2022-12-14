@@ -185,7 +185,7 @@ proc handleInput*(inp:var Input, display:bool=true): bool =
             echo ("\n&gray;" & oldSuggestions.join("   ")).color
             setPos(tempPos)
         else:
-            inp.text &= suggestion
+            inp.text &= suggestion.removeColor
 
     elif inp.lastKey == Escape:
         if secondlast == Tab:
