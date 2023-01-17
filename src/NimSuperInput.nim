@@ -137,9 +137,6 @@ proc handleInput*(inp:var Input, display:bool=true): bool =
 
         if inp.lastKey != 0:
             inp.position = actualPos
-        else:
-            echo "\n\n",curpos
-            echo textSpan
 
     let key:int = msvcrt_getch().getKey
     let secondlast = inp.lastKey

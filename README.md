@@ -1,6 +1,13 @@
 # NimSuperInput
 Custom build Input Loop for windows with better features
 
+## Functionality
+
+- Per character input callback. Useful for custom syntax highlighting.
+- Suggestions with tab-complete
+- Hinting
+- Special key handling (home & end, ctrl+[arrow / backspace], etc)
+
 
 ## Examples
 
