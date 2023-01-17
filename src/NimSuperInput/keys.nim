@@ -102,5 +102,4 @@ proc getKey*(key:cint): cint =
             of 71: return Home
             else:
                 echo "\nspecial 224: ", special
-
     return key

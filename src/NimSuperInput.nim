@@ -131,16 +131,19 @@ proc handleInput*(inp:var Input, display:bool=true): bool =
         flushFile(stdout)
         showCursor()
 
+        var curpos = getPos()
+        let textSpan = newPos((x:0,y:0), (inp.prompt & inp.displayText.removeColor).len - inp.index)
+        let actualPos = (x:curpos.x-textSpan.x, y:curpos.y-textSpan.y)
+
+        if inp.lastKey != 0:
+            inp.position = actualPos
+        else:
+            echo "\n\n",curpos
+            echo textSpan
+
     let key:int = msvcrt_getch().getKey
     let secondlast = inp.lastKey
     var oldText = inp.text
-
-    var curpos = getPos()
-    let textSpan = newPos((x:0,y:0), (inp.prompt & inp.displayText.removeColor).len - inp.index)
-    let actualPos = (x:curpos.x-textSpan.x, y:curpos.y-textSpan.y)
-
-    if inp.lastKey != 0:
-        inp.position = actualPos
 
     inp.lastKey = key
 

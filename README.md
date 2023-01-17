@@ -46,7 +46,7 @@ while inp.handleInput():
     discard
 ```
 
-## Input object
+## Input object Docs
 ```nim
 Input* = object
     suggestions*:seq[string]
@@ -99,3 +99,23 @@ Cursor index related to `Input.text`
 _**`Input.returnKey`**_
 What key will be used to return the input text
 Default: `keys.Enter`
+
+## Function docs
+
+`Input.handleInput : bool`
+Returns boolean
+
+Returns true if the return key has not been pressed.
+Returns false if return key has been presesd.
+
+Intended use case:
+```nim
+import NimSuperInput
+
+var inp:Input = input()
+
+while inp.handleInput():
+    discard
+
+echo inp.text
+```
