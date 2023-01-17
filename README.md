@@ -1,2 +1,2 @@
-# NimWinREPL
-Custom build Read Eval Print Loop for windows
+# NimSuperInput
+Custom build Input Loop for windows with better features
