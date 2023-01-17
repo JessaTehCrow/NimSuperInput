@@ -1,6 +1,10 @@
 import terminal, winlean, strutils, math
 import nimcolor
-import utility/keys
+import NimSuperInput/keys
+import os
+
+# Neccecary to enable colors
+discard execShellCmd("")
 
 export keys
 
@@ -18,23 +22,23 @@ type
         position*:Position
         prompt*:string
         index*:int
-        
+
         returnKey:int
 
 
-proc getHandle*():Handle =
+proc getHandle():Handle =
     return getStdHandle(STD_OUTPUT_HANDLE)
 
 
-proc getPos*(): Position =
+proc getPos(): Position =
     return getCursorPos( getHandle() )
 
 
-proc setPos*(pos:Position) =
+proc setPos(pos:Position) =
     setCursorPos(getHandle(), pos.x, pos.y)
 
 
-proc newPos*(original:Position, text:string): Position = 
+proc newPos(original:Position, text:string): Position = 
     let winSize = terminalSize()
     let newY:int = original.y + math.floor((text.len + original.x) / (winSize.w)).int
     let newX:int = (original.x + text.len) mod winSize.w
@@ -42,7 +46,7 @@ proc newPos*(original:Position, text:string): Position =
     return (x:newX, y:newY)
 
 
-proc newPos*(original:Position, amount:int): Position = 
+proc newPos(original:Position, amount:int): Position = 
     let winSize = terminalSize()
     let newY:int = original.y + math.floor((amount + original.x) / (winSize.w)).int
     let newX:int = (original.x + amount) mod winSize.w
@@ -50,7 +54,7 @@ proc newPos*(original:Position, amount:int): Position =
     return (x:newX, y:newY)
 
 
-proc clearLine*(line:int, amount:int=1) =
+proc clearLine(line:int, amount:int=1) =
     let currentPos:Position = getPos()
     let winSize = terminalSize()
    
@@ -61,19 +65,7 @@ proc clearLine*(line:int, amount:int=1) =
     showCursor(stdout)
 
 
-proc clearLine*(line:int, text:string) = 
-    let currentPos:Position = getPos()
-    let winSize = terminalSize()
-    let lineAmount:int = math.ceil(text.len / winSize.w).int
-
-    hideCursor(stdout)
-    setCursorPos(getHandle(), 0, line)
-    echo text & " ".repeat(winSize.w * lineAmount)[text.len..^1]
-    setPos(currentPos)
-    showCursor(stdout)
-
-
-proc clearLine*(line:int, displayText:string, clearAmount:int) =
+proc clearLine(line:int, displayText:string, clearAmount:int) =
     let currentPos:Position = getPos()
     let winSize = terminalSize()
     let amount = max((winSize.w * clearAmount) - displayText.removeColor.len, 0)
@@ -85,11 +77,11 @@ proc clearLine*(line:int, displayText:string, clearAmount:int) =
     showCursor(stdout)
 
 
-proc newREPL*(prompt:string="", returnKey:int=Enter, suggestions:seq[string]= @[]):Input =
+proc input*(prompt:string="", returnKey:int=Enter, suggestions:seq[string]= @[]):Input =
     Input(prompt:prompt, text:"", returnKey:returnKey, position:getPos(), suggestions:suggestions)
 
 
-proc naiveSplit*(str:string, charSplit:char=' ', reserve:bool=false):seq[string] = 
+proc naiveSplit(str:string, charSplit:char=' ', reserve:bool=false):seq[string] = 
     var temp:string
     var wasChar:bool
 
@@ -107,7 +99,7 @@ proc naiveSplit*(str:string, charSplit:char=' ', reserve:bool=false):seq[string]
         result.add(temp)
 
 
-proc getSuggestion*(text:string, suggestions:seq[string]): string = 
+proc getSuggestion(text:string, suggestions:seq[string]): string = 
     if text.len == 0: return
 
     for k in suggestions:
@@ -116,16 +108,11 @@ proc getSuggestion*(text:string, suggestions:seq[string]): string =
             return raw[text.len..^1]
 
 
-proc allSuggestions*(text:string, suggestions:seq[string]): seq[string] =
+proc allSuggestions(text:string, suggestions:seq[string]): seq[string] =
     for s in suggestions:
         let raw = s.removeColor
         if raw.startsWith(text) and text != raw:
             result.add(s)
-
-
-proc getInput*(inp: var Input): bool =
-    inp.lastKey = msvcrt_getch().getKey
-    return true
 
 
 proc handleInput*(inp:var Input, display:bool=true): bool = 
