@@ -106,6 +106,7 @@ _**`Input.position`**_
 The `Input`'s position within the terminal window
 
 _**`Input.prompt`**_
+
 The prompt being displayed
 
 _**`Input.index`**_
