@@ -1,6 +1,8 @@
 # NimSuperInput
 Custom build Input Loop for windows with better features
 
+use `nimble install http://github.com/JessaTehCrow/NimSuperInput` to install directly with nim.
+
 ## Functionality
 
 - Per character input callback. Useful for custom syntax highlighting.
