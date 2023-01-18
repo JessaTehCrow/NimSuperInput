@@ -71,39 +71,49 @@ Input* = object
 ```
 
 _**`Input.suggestions`**_
+
 Sequence of strings of all possible suggestions. 
 This is also what will be filled in as auto-complete
 
 Suggestions are only for the last word (seperated by spaces)
 
 _**`Input.suggestionIndex`**_
+
 What index of the `Input.suggestions` is currently being displayed
 
 _**`Input.displayText`**_
+
 What string is being displayed
 
 _**`Input.hint`**_
+
 What string is being displayed as a hint (does not work with auto complete)
 
 _**`Input.text`**_
+
 The current text being displayed
 
 _**`Input.oldText`**_
+
 The text before the latest character was pressed
 
 _**`Input.lastKey`**_
+
 Last key pressed 
 
 _**`Input.position`**_
+
 The `Input`'s position within the terminal window
 
 _**`Input.prompt`**_
 The prompt being displayed
 
 _**`Input.index`**_
+
 Cursor index related to `Input.text`
 
 _**`Input.returnKey`**_
+
 What key will be used to return the input text
 Default: `keys.Enter`
 
