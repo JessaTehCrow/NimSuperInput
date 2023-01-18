@@ -25,6 +25,9 @@ type
 
         returnKey:int
 
+proc `-`(a,b:Position): Position = 
+    return (x: a.x - b.x, y: a.y - b.y)
+
 
 proc getHandle():Handle =
     return getStdHandle(STD_OUTPUT_HANDLE)
@@ -116,6 +119,12 @@ proc allSuggestions(text:string, suggestions:seq[string]): seq[string] =
 
 
 proc handleInput*(inp:var Input, display:bool=true): bool = 
+    if inp.lastKey != 0 and (inp.prompt & inp.displayText).removeColor == (inp.prompt & inp.text).removeColor:
+        let curpos = getPos()
+        let span = newPos((x:0,y:0), (inp.prompt & inp.oldText).removeColor.len - inp.index)
+        let actualPos = curpos - span
+        inp.position = actualPos
+
     let suggestion:string = getSuggestion(inp.text.split()[^1], inp.suggestions)
     let oldSuggestions = allSuggestions(inp.oldText.split()[^1], inp.suggestions)
 
@@ -130,13 +139,6 @@ proc handleInput*(inp:var Input, display:bool=true): bool =
         setPos(newCursorPos)
         flushFile(stdout)
         showCursor()
-
-        var curpos = getPos()
-        let textSpan = newPos((x:0,y:0), (inp.prompt & inp.displayText.removeColor).len - inp.index)
-        let actualPos = (x:curpos.x-textSpan.x, y:curpos.y-textSpan.y)
-
-        if inp.lastKey != 0:
-            inp.position = actualPos
 
     let key:int = msvcrt_getch().getKey
     let secondlast = inp.lastKey
