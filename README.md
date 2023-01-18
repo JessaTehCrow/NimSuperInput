@@ -109,7 +109,7 @@ Default: `keys.Enter`
 
 ## Function docs
 
-`Input.handleInput : bool`
+`Input.handleInput ( display : bool ) : bool`
 Returns boolean
 
 Returns true if the return key has not been pressed.
@@ -126,3 +126,6 @@ while inp.handleInput():
 
 echo inp.text
 ```
+
+The `display` argument makes it so it automatically displays, corrects and does everything for you.
+Can be disabled for a custom interface but is not recommended for non-advanced users.
