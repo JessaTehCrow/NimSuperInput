@@ -127,6 +127,7 @@ proc handleInput*(inp:var Input, display:bool=true): bool =
 
     let suggestion:string = getSuggestion(inp.text.split()[^1], inp.suggestions)
     let oldSuggestions = allSuggestions(inp.oldText.split()[^1], inp.suggestions)
+    let newSuggestions = allSuggestions(inp.text.split()[^1], inp.suggestions)
 
     let winSize = terminalSize()
     let newCursorPos = newPos(inp.position, (inp.prompt & inp.displayText.removeColor).len - inp.index)
@@ -175,6 +176,10 @@ proc handleInput*(inp:var Input, display:bool=true): bool =
             setPos(tempPos)
         else:
             inp.text &= suggestion.removeColor
+            if newSuggestions.len > 10:
+                var tempPos = newPos(inp.position, (inp.prompt & inp.text).len - inp.index)
+                echo "\n&yellow; More than 10 suggestions, press tab again to see all.".color
+                setPos(tempPos)
 
     elif inp.lastKey == Escape:
         if secondlast == Tab:
