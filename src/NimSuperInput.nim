@@ -175,11 +175,12 @@ proc handleInput*(inp:var Input, display:bool=true): bool =
             echo ("\n&gray;" & oldSuggestions.join("   ")).color
             setPos(tempPos)
         else:
-            var tempPos = newPos(inp.position, (inp.prompt & inp.text).removeColor.len - inp.index)
-            inp.text &= suggestion.removeColor
             if newSuggestions.len > 10:
+                var tempPos = newPos(inp.position, (inp.prompt & inp.text).removeColor.len - inp.index)
                 echo "\n&yellow; More than 10 suggestions, press tab again to see all.".color
                 setPos(tempPos)
+            else:
+                inp.text &= suggestion.removeColor
 
     elif inp.lastKey == Escape:
         if secondlast == Tab:
