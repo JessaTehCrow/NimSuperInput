@@ -8,6 +8,8 @@ discard execShellCmd("")
 
 export keys
 
+echo "\n&yellow;Superinput: v1.2".color
+
 type  
     Position* = tuple[x,y:int]
 
@@ -22,6 +24,7 @@ type
         position*:Position
         prompt*:string
         index*:int
+        oldIndex*:int
 
         returnKey:int
 
@@ -121,9 +124,10 @@ proc allSuggestions(text:string, suggestions:seq[string]): seq[string] =
 proc handleInput*(inp:var Input, display:bool=true): bool = 
     if inp.lastKey != 0 and (inp.prompt & inp.displayText).removeColor == (inp.prompt & inp.text).removeColor:
         let curpos = getPos()
-        let span = newPos((x:0,y:0), (inp.prompt & inp.oldText).removeColor.len - inp.index)
+        let span = newPos((x:0,y:0), (inp.prompt & inp.oldText).removeColor.len - inp.oldIndex)
         let actualPos = curpos - span
         inp.position = actualPos
+        echo "\n\n\n",span, actualPos, curpos
 
     let suggestion:string = getSuggestion(inp.text.split()[^1], inp.suggestions)
     let oldSuggestions = allSuggestions(inp.oldText.split()[^1], inp.suggestions)
@@ -145,6 +149,7 @@ proc handleInput*(inp:var Input, display:bool=true): bool =
     let secondlast = inp.lastKey
     var oldText = inp.text
 
+    inp.oldIndex = inp.index
     inp.lastKey = key
 
     if key in 33..126:
