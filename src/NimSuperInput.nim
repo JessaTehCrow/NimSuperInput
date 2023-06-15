@@ -127,7 +127,6 @@ proc handleInput*(inp:var Input, display:bool=true): bool =
         let span = newPos((x:0,y:0), (inp.prompt & inp.oldText).removeColor.len - inp.oldIndex)
         let actualPos = curpos - span
         inp.position = actualPos
-        echo "\n\n\n",span, actualPos, curpos
 
     let suggestion:string = getSuggestion(inp.text.split()[^1], inp.suggestions)
     let oldSuggestions = allSuggestions(inp.oldText.split()[^1], inp.suggestions)
