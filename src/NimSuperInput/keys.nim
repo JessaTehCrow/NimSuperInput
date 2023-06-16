@@ -85,6 +85,12 @@ proc getKey*(key:cint): cint =
             else:
                 echo "\nspecial 0: ",special
 
+    # Key == 224 is weird
+    # if it's 224, that means that it's kind of an overflowing id?
+    # as, it basically sends 2 inputs seperately at once
+    # which also means, you'll need to listen twice for one input
+
+    # which is what's being checked for here
     elif key == 224:
         let special = msvcrt_getch()
         case special
