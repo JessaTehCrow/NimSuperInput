@@ -8,8 +8,6 @@ discard execShellCmd("")
 
 export keys
 
-echo "\n&yellow;Superinput: v1.2".color
-
 type  
     Position* = tuple[x,y:int]
 
