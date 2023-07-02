@@ -107,14 +107,14 @@ proc getSuggestion(text:string, suggestions:seq[string]): string =
     if text.len == 0: return
 
     for k in suggestions:
-        let raw = k.removeColor
+        let raw = k.removeAllColor
         if raw.startsWith(text) and text != raw:
             return raw[text.len..^1]
 
 
 proc allSuggestions(text:string, suggestions:seq[string]): seq[string] =
     for s in suggestions:
-        let raw = s.removeColor
+        let raw = s.removeAllColor
         if raw.startsWith(text) and text != raw:
             result.add(s)
 
@@ -126,7 +126,7 @@ proc handleInput*(inp:var Input, display:bool=true): bool =
         let actualPos = curpos - span
         inp.position = actualPos
 
-    let suggestion:string = getSuggestion(inp.text.split()[^1], inp.suggestions)
+    let suggestion     = getSuggestion(inp.text.split()[^1], inp.suggestions)
     let oldSuggestions = allSuggestions(inp.oldText.split()[^1], inp.suggestions)
     let newSuggestions = allSuggestions(inp.text.split()[^1], inp.suggestions)
 
