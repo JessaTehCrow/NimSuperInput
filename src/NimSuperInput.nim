@@ -170,7 +170,7 @@ proc handleInput*(inp:var Input, display:bool=true): bool =
     elif inp.lastKey == Tab:
         if oldSuggestions.len > 0 and secondlast == Tab:
             var tempPos = newPos(inp.position, (inp.prompt & inp.oldText).removeColor.len - inp.index)
-            inp.text = inp.oldText & oldSuggestions[inp.suggestionIndex mod oldSuggestions.len].removeColor[inp.oldText.split()[^1].len..^1]
+            inp.text = inp.oldText & oldSuggestions[inp.suggestionIndex mod oldSuggestions.len].removeColor[inp.oldText.split()[^1].len..^1].removeAllColor
             oldText = inp.oldText
             inp.suggestionIndex += 1
             hideCursor()
@@ -181,7 +181,7 @@ proc handleInput*(inp:var Input, display:bool=true): bool =
                 var tempPos = newPos(inp.position, (inp.prompt & inp.text).removeColor.len - inp.index)
                 echo "\n&yellow; More than 10 suggestions, press tab again to see all.".color
                 setPos(tempPos)
-            inp.text &= suggestion.removeColor
+            inp.text &= suggestion.removeAllColor
 
     elif inp.lastKey == Escape:
         if secondlast == Tab:

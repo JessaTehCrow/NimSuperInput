@@ -1,6 +1,6 @@
 # Package
 
-version       = "0.2.3"
+version       = "0.2.4"
 author        = "JessaTehCrow"
 description   = "Nim Better Input for windows"
 license       = "MIT"
