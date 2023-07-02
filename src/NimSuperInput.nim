@@ -12,6 +12,8 @@ type
     Position* = tuple[x,y:int]
 
     Input* = object
+        history*:seq[string]
+        historyIndex*:int
         suggestions*:seq[string]
         suggestionIndex*:int
         displayText*:string
@@ -84,6 +86,10 @@ proc clearLine(line:int, displayText:string, clearAmount:int) =
 proc input*(prompt:string="", returnKey:int=Enter, suggestions:seq[string]= @[]):Input =
     Input(prompt:prompt, text:"", returnKey:returnKey, position:getPos(), suggestions:suggestions)
 
+proc reset*(handler:var Input) =
+    handler.text = ""
+    handler.position = getPos()
+
 
 proc naiveSplit(str:string, charSplit:char=' ', reserve:bool=false):seq[string] = 
     var temp:string
@@ -152,10 +158,10 @@ proc handleInput*(inp:var Input, display:bool=true): bool =
     if key in 33..126:
         inp.text.insert($chr(key), inp.text.len - inp.index)
 
-    elif key == Space:
+    elif inp.lastKey == Space:
         inp.text.insert(" ", inp.text.len - inp.index)
 
-    elif key == Backspace and inp.text != "" and inp.index != inp.text.len:
+    elif inp.lastKey == Backspace and inp.text != "" and inp.index != inp.text.len:
         inp.text = inp.text[0..^(inp.index+2)] & inp.text[^(inp.index)..^1]
     
     elif key == CtrlBackspace and inp.text != "" and inp.index != inp.text.len:
@@ -167,6 +173,10 @@ proc handleInput*(inp:var Input, display:bool=true): bool =
     elif inp.lastKey == ArrowRight and inp.index > 0:
         inp.index -= 1
     
+    elif inp.lastKey == ArrowUp and inp.historyIndex < inp.history.len-1:
+        inp.text = inp.history[historyIndex] 
+        inp.historyIndex += 1
+
     elif inp.lastKey == Tab:
         if oldSuggestions.len > 0 and secondlast == Tab:
             var tempPos = newPos(inp.position, (inp.prompt & inp.oldText).removeColor.len - inp.index)
