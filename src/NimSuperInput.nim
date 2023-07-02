@@ -116,7 +116,7 @@ proc allSuggestions(text:string, suggestions:seq[string]): seq[string] =
     for s in suggestions:
         let raw = s.removeAllColor
         if raw.startsWith(text) and text != raw:
-            result.add(raw)
+            result.add(s)
 
 
 proc handleInput*(inp:var Input, display:bool=true): bool = 
@@ -170,7 +170,7 @@ proc handleInput*(inp:var Input, display:bool=true): bool =
     elif inp.lastKey == Tab:
         if oldSuggestions.len > 0 and secondlast == Tab:
             var tempPos = newPos(inp.position, (inp.prompt & inp.oldText).removeColor.len - inp.index)
-            inp.text = inp.oldText & oldSuggestions[inp.suggestionIndex mod oldSuggestions.len].removeColor[inp.oldText.split()[^1].len..^1].removeAllColor
+            inp.text = inp.oldText & oldSuggestions[inp.suggestionIndex mod oldSuggestions.len].removeAllColor[inp.oldText.split()[^1].len..^1]
             oldText = inp.oldText
             inp.suggestionIndex += 1
             hideCursor()
