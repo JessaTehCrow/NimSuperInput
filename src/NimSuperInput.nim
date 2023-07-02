@@ -116,7 +116,7 @@ proc allSuggestions(text:string, suggestions:seq[string]): seq[string] =
     for s in suggestions:
         let raw = s.removeAllColor
         if raw.startsWith(text) and text != raw:
-            result.add(s)
+            result.add(raw)
 
 
 proc handleInput*(inp:var Input, display:bool=true): bool = 
