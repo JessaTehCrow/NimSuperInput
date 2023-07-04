@@ -86,9 +86,17 @@ proc clearLine(line:int, displayText:string, clearAmount:int) =
 proc input*(prompt:string="", returnKey:int=Enter, suggestions:seq[string]= @[]):Input =
     Input(prompt:prompt, text:"", returnKey:returnKey, position:getPos(), suggestions:suggestions)
 
+
 proc reset*(handler:var Input) =
     handler.text = ""
     handler.position = getPos()
+    handler.suggestions = @[]
+    handler.suggestionIndex = 0
+    handler.displayText = ""
+    handler.hint = ""
+    handler.oldText = ""
+    handler.index = 0
+    handler.oldIndex = 0
 
 
 proc naiveSplit(str:string, charSplit:char=' ', reserve:bool=false):seq[string] = 
