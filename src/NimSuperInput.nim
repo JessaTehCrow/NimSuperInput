@@ -175,16 +175,16 @@ proc handleInput*(inp:var Input, display:bool=true): bool =
     elif inp.lastKey == ArrowRight and inp.index > 0:
         inp.index -= 1
     
-    elif inp.lastKey == ArrowUp and inp.historyIndex < inp.history.len-1:
-        inp.text = inp.history[inp.historyIndex] 
+    elif inp.lastKey == ArrowUp and inp.historyIndex < inp.history.len:
         inp.historyIndex += 1
+        inp.text = inp.history[^inp.historyIndex]
 
     elif inp.lastKey == ArrowDown and inp.historyIndex > 0:
         inp.historyIndex -= 1
         if inp.historyIndex == 0:
             inp.text = ""
         else:
-            inp.text = inp.history[inp.historyIndex] 
+            inp.text = inp.history[^inp.historyIndex] 
 
     elif inp.lastKey == Tab:
         if oldSuggestions.len > 0 and secondlast == Tab:
