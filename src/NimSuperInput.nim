@@ -88,16 +88,9 @@ proc input*(prompt:string="", returnKey:int=Enter, suggestions:seq[string]= @[])
 
 
 proc reset*(handler:var Input) =
-    handler = input(handler.prompt, handler.returnKey, handler.suggestions)
-    # handler.text = ""
-    # handler.position = getPos()
-    # handler.suggestions = @[]
-    # handler.suggestionIndex = 0
-    # handler.displayText = ""
-    # handler.hint = ""
-    # handler.oldText = ""
-    # handler.index = 0
-    # handler.oldIndex = 0
+    newHandler = input(handler.prompt, handler.returnKey, handler.suggestions)
+    newHandler.history = handler.history
+    handler = newHandler 
 
 
 proc naiveSplit(str:string, charSplit:char=' ', reserve:bool=false):seq[string] = 
