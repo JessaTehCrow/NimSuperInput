@@ -88,7 +88,7 @@ proc input*(prompt:string="", returnKey:int=Enter, suggestions:seq[string]= @[])
 
 
 proc reset*(handler:var Input) =
-    newHandler = input(handler.prompt, handler.returnKey, handler.suggestions)
+    var newHandler = input(handler.prompt, handler.returnKey, handler.suggestions)
     newHandler.history = handler.history
     handler = newHandler 
 
